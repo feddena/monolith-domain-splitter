@@ -1,4 +1,4 @@
-package com.konsus.domaintag
+package com.monolith.splitter
 
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse

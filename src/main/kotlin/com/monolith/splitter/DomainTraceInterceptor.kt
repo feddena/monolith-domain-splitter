@@ -1,8 +1,8 @@
-package com.konsus.domaintag
+package com.monolith.splitter
 
-import com.konsus.domaintag.DomainTags.DOMAIN
-import com.konsus.domaintag.DomainTags.TEAM
-import com.konsus.domaintag.configuration.DomainTraceInterceptorConfiguration
+import com.monolith.splitter.DomainTags.DOMAIN
+import com.monolith.splitter.DomainTags.TEAM
+import com.monolith.splitter.configuration.DomainTraceInterceptorConfiguration
 import datadog.trace.api.interceptor.MutableSpan
 import datadog.trace.api.interceptor.TraceInterceptor
 import org.springframework.stereotype.Component

@@ -1,11 +1,11 @@
-package com.konsus.domaintag.configuration
+package com.monolith.splitter.configuration
 
-import com.konsus.domaintag.DomainHandlerInterceptor
-import com.konsus.domaintag.DomainMdcProvider
-import com.konsus.domaintag.DomainProvider
-import com.konsus.domaintag.DomainSpanService
-import com.konsus.domaintag.MdcProvider
-import com.konsus.domaintag.SpanProvider
+import com.monolith.splitter.DomainHandlerInterceptor
+import com.monolith.splitter.DomainMdcProvider
+import com.monolith.splitter.DomainProvider
+import com.monolith.splitter.DomainSpanService
+import com.monolith.splitter.MdcProvider
+import com.monolith.splitter.SpanProvider
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration

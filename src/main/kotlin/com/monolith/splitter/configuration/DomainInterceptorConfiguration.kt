@@ -1,11 +1,11 @@
-package com.konsus.domaintag.configuration
+package com.monolith.splitter.configuration
 
-import com.konsus.domaintag.DomainMdcProvider
-import com.konsus.domaintag.DomainMethodInterceptor
-import com.konsus.domaintag.DomainProvider
-import com.konsus.domaintag.DomainSpanService
-import com.konsus.domaintag.DomainTagsService
-import com.konsus.domaintag.DomainTraceInterceptor
+import com.monolith.splitter.DomainMdcProvider
+import com.monolith.splitter.DomainMethodInterceptor
+import com.monolith.splitter.DomainProvider
+import com.monolith.splitter.DomainSpanService
+import com.monolith.splitter.DomainTagsService
+import com.monolith.splitter.DomainTraceInterceptor
 import datadog.trace.api.GlobalTracer
 import org.slf4j.LoggerFactory
 import org.springframework.aop.Advisor
