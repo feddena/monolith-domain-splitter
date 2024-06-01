@@ -1,6 +1,6 @@
-package com.konsus.domaintag
+package com.monolith.splitter
 
-import com.konsus.domaintag.DomainTags.DOMAIN
+import com.monolith.splitter.DomainTags.DOMAIN
 import io.opentracing.util.GlobalTracer
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service

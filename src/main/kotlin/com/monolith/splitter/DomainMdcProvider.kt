@@ -1,7 +1,7 @@
-package com.konsus.domaintag
+package com.monolith.splitter
 
-import com.konsus.domaintag.DomainTags.DOMAIN
-import com.konsus.domaintag.DomainTags.TEAM
+import com.monolith.splitter.DomainTags.DOMAIN
+import com.monolith.splitter.DomainTags.TEAM
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 

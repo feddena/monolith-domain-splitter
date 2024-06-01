@@ -1,4 +1,4 @@
-package com.konsus.domaintag
+package com.monolith.splitter
 
 internal object DomainTags {
     const val DOMAIN = "domain"

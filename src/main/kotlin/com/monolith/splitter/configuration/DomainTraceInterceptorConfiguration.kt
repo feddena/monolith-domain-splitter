@@ -1,4 +1,4 @@
-package com.konsus.domaintag.configuration
+package com.monolith.splitter.configuration
 
 interface DomainTraceInterceptorConfiguration {
     fun getServicesToOverride(): Set<String>

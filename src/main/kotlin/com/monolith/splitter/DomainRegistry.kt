@@ -1,4 +1,4 @@
-package com.konsus.domaintag
+package com.monolith.splitter
 
 object DomainRegistry {
     private val nameToDomain = mutableMapOf<String, DomainValue>()

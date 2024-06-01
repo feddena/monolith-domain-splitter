@@ -1,4 +1,4 @@
-package com.konsus.domaintag
+package com.monolith.splitter
 
 import org.slf4j.MDC
 import org.springframework.stereotype.Component
