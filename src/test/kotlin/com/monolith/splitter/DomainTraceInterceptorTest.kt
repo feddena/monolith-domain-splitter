@@ -81,6 +81,18 @@ class DomainTraceInterceptorTest {
         softly.assertThat(span3.serviceName).isEqualTo("splitter-files")
     }
 
+    @Test
+    fun `should fail to pass - testing ci`() {
+        val span1 = FakeMutableSpan(tags = mapOf("domain" to "files"))
+        val span2 = FakeMutableSpan(parentSpan = span1)
+        val span3 = FakeMutableSpan(parentSpan = span2)
+
+        interceptor.onTraceComplete(mutableListOf(span2, span3))
+
+        softly.assertThat(span2.serviceName).isEqualTo("not a correct service")
+        softly.assertThat(span3.serviceName).isEqualTo("splitter-files")
+    }
+
     private class FakeMutableSpan(
         private var service: String = "real-service-to-override",
         tags: Map<String, Any> = mapOf(),
