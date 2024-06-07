@@ -1,6 +1,9 @@
 package com.monolith.splitter
 
-object DomainRegistry {
+import org.springframework.stereotype.Component
+
+@Component
+class DomainRegistry {
     private val nameToDomain = mutableMapOf<String, DomainValue>()
 
     fun registerDomainValue(domainValue: DomainValue) {

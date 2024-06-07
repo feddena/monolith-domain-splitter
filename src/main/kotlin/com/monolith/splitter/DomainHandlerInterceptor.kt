@@ -13,6 +13,7 @@ class DomainHandlerInterceptor(
     private val domainMdcProvider: DomainMdcProvider,
     private val domainSpanService: DomainSpanService,
     private val domainProvider: DomainProvider,
+    private val domainRegistry: DomainRegistry,
 ) : HandlerInterceptor {
 
     override fun preHandle(request: HttpServletRequest, response: HttpServletResponse, handler: Any): Boolean {
@@ -27,15 +28,18 @@ class DomainHandlerInterceptor(
     private fun putDomainTagsInSpanAndMdc(handler: Any) {
         if (handler is HandlerMethod) {
             domainProvider.findInMvcCall(handler)?.also { domain ->
-                val domainValue = domain.value
-                    .java
-                    .enumConstants
-                    .first()
-                domainSpanService.addDomainTagToSpan(domainValue)
-                domainMdcProvider.putDomainTags(domainValue)
+                val domainValue = domainRegistry.fromString(domain.value)
+                if (domainValue != null) {
+                    domainSpanService.addDomainTagToSpan(domainValue)
+                    domainMdcProvider.putDomainTags(domainValue)
+                } else {
+                    log.warn(
+                        "Failed to parse domain tag - domain=${domain.value}, handler=${handler.javaClass}"
+                    )
+                }
             }
         } else {
-            log.warn("Failed to enrich domain tag for handler ${handler.javaClass}")
+            log.warn("Failed to enrich domain tag - handler=${handler.javaClass}")
         }
     }
 

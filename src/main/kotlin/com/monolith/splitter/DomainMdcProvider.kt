@@ -6,20 +6,25 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 @Component
-class DomainMdcProvider(private val mdcProvider: MdcProvider) {
+class DomainMdcProvider(
+    private val mdcProvider: MdcProvider,
+    private val domainRegistry: DomainRegistry,
+) {
     fun putDomainTags(domainValue: DomainValue) {
         mdcProvider.put(DOMAIN, domainValue.lowercaseName())
         mdcProvider.put(TEAM, domainValue.team.lowercaseName())
     }
 
     fun findCurrentDomainTag(): DomainValue? =
-        mdcProvider.get(DOMAIN)?.let { domainName ->
-            DomainRegistry.fromString(domainName).also { matched ->
-                if (matched == null) {
-                    log.error("Found incorrect domain in MDC - $domainName")
-                }
+        mdcProvider.get(DOMAIN)
+            ?.let { domainName ->
+                domainRegistry.fromString(domainName)
+                    .also { matched ->
+                        if (matched == null) {
+                            log.error("Found incorrect domain in MDC - $domainName")
+                        }
+                    }
             }
-        }
 
     fun clearDomainTags() {
         mdcProvider.remove(DOMAIN)

@@ -3,6 +3,7 @@ package com.monolith.splitter.configuration
 import com.monolith.splitter.DomainMdcProvider
 import com.monolith.splitter.DomainMethodInterceptor
 import com.monolith.splitter.DomainProvider
+import com.monolith.splitter.DomainRegistry
 import com.monolith.splitter.DomainSpanService
 import com.monolith.splitter.DomainTagsService
 import com.monolith.splitter.DomainTraceInterceptor
@@ -18,12 +19,13 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 @ComponentScan
 class DomainInterceptorConfiguration(
-    private val domainTraceInterceptorConfiguration: DomainTraceInterceptorConfiguration,
+    private val domainRegistry: DomainRegistry,
+    domainTraceInterceptorConfiguration: DomainTraceInterceptorConfiguration,
 ) {
 
     init {
         GlobalTracer.get()
-            .addTraceInterceptor(DomainTraceInterceptor(domainTraceInterceptorConfiguration))
+            .addTraceInterceptor(DomainTraceInterceptor(domainTraceInterceptorConfiguration, domainRegistry))
         log.info("DomainTraceInterceptor is configured")
     }
 
@@ -42,9 +44,13 @@ class DomainInterceptorConfiguration(
         // Match both methods annotated with @Domain and methods inside classes annotated with @Domain.
         // Filter out RestController classes, as they are handled by DomainHandlerInterceptor
         pointcut.expression = "!@within(org.springframework.web.bind.annotation.RestController) &&" +
-            "(@annotation(com.konsus.domaintag.Domain) || @within(com.konsus.domaintag.Domain))"
-        return DefaultPointcutAdvisor(pointcut, DomainMethodInterceptor(domainTagsService, domainProvider))
-            .also { log.info("DomainMethodInterceptor is configured to target both classes and methods") }
+                "(@annotation(com.konsus.domaintag.Domain) || @within(com.konsus.domaintag.Domain))"
+        return DefaultPointcutAdvisor(
+            pointcut,
+            DomainMethodInterceptor(domainTagsService, domainProvider, domainRegistry)
+        ).also {
+            log.info("DomainMethodInterceptor is configured to target both classes and methods")
+        }
     }
 
     private companion object {
