@@ -8,4 +8,4 @@ import kotlin.reflect.KClass
  */
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.CLASS, AnnotationTarget.FUNCTION)
-annotation class Domain(val value: KClass<out DomainValue>)
+annotation class Domain(val value: String)

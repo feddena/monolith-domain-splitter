@@ -3,6 +3,7 @@ package com.monolith.splitter.configuration
 import com.monolith.splitter.DomainHandlerInterceptor
 import com.monolith.splitter.DomainMdcProvider
 import com.monolith.splitter.DomainProvider
+import com.monolith.splitter.DomainRegistry
 import com.monolith.splitter.DomainSpanService
 import com.monolith.splitter.MdcProvider
 import com.monolith.splitter.SpanProvider
@@ -18,15 +19,18 @@ class DomainHandlerInterceptorConfiguration {
     internal fun domainHandlerInterceptor(
         domainMdcProvider: DomainMdcProvider,
         domainSpanService: DomainSpanService,
-        domainProvider: DomainProvider
+        domainProvider: DomainProvider,
+        domainRegistry: DomainRegistry,
     ) = DomainHandlerInterceptor(
         domainMdcProvider,
         domainSpanService,
-        domainProvider
+        domainProvider,
+        domainRegistry,
     )
 
     @Bean
-    internal fun domainMdcProvider(mdcProvider: MdcProvider) = DomainMdcProvider(mdcProvider)
+    internal fun domainMdcProvider(mdcProvider: MdcProvider, domainRegistry: DomainRegistry) =
+        DomainMdcProvider(mdcProvider, domainRegistry)
 
     @Bean
     internal fun domainSpanService(spanProvider: SpanProvider) = DomainSpanService(spanProvider)

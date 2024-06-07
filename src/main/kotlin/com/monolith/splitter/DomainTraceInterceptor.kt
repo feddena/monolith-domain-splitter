@@ -9,8 +9,12 @@ import org.springframework.stereotype.Component
 
 @Component
 internal class DomainTraceInterceptor(
-    private val settings: DomainTraceInterceptorConfiguration
+    private val settings: DomainTraceInterceptorConfiguration,
+    private val domainRegistry: DomainRegistry,
 ) : TraceInterceptor {
+
+    override fun priority() = 30
+
     override fun onTraceComplete(spans: MutableCollection<out MutableSpan>): MutableCollection<out MutableSpan> {
         findClosestDomainInSpans(spans)?.also { earliestDomain ->
             spans.forEach {
@@ -25,8 +29,6 @@ internal class DomainTraceInterceptor(
         return spans
     }
 
-    override fun priority() = 30
-
     /**
      * In environments with very long traces, sometimes the trace spans can exceed typical limits (e.g., 1000 spans).
      * When this occurs, not all spans may be present in the collection due to these limits.
@@ -34,7 +36,9 @@ internal class DomainTraceInterceptor(
      */
     private fun findClosestDomainInSpans(spans: Collection<MutableSpan>): DomainValue? {
         val closestSpanWithDomain = findEarliestDomainInTraceSpans(spans) ?: findLatestDomainInParentSpans(spans)
-        return closestSpanWithDomain?.tags?.get(DOMAIN)?.let { DomainRegistry.fromString(it as String)!! }
+        return closestSpanWithDomain?.tags
+            ?.get(DOMAIN)
+            ?.let { domainRegistry.fromString(it as String) }
     }
 
     private fun findEarliestDomainInTraceSpans(spans: Collection<MutableSpan>): MutableSpan? =
