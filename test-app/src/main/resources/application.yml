@@ -1,0 +1,6 @@
+# this needed to check success
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
