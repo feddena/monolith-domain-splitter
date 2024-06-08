@@ -3,6 +3,7 @@ plugins {
     kotlin("plugin.spring") version "2.0.0"
     id("org.springframework.boot") version "3.3.0"
     id("io.spring.dependency-management") version "1.1.0"
+    application
 }
 
 repositories {
@@ -26,4 +27,12 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+application {
+    mainClass.set("com.monolith.splitter.TestApplicationKt")
+}
+
+tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
+    mainClass.set("com.monolith.splitter.TestApplicationKt")
 }
