@@ -1,10 +1,8 @@
 package com.monolith.splitter.configuration
 
-import com.monolith.splitter.DomainMdcProvider
 import com.monolith.splitter.DomainMethodInterceptor
 import com.monolith.splitter.DomainProvider
 import com.monolith.splitter.DomainRegistry
-import com.monolith.splitter.DomainSpanService
 import com.monolith.splitter.DomainTagsService
 import com.monolith.splitter.DomainTraceInterceptor
 import datadog.trace.api.GlobalTracer
@@ -18,7 +16,7 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 @ComponentScan
-class DomainInterceptorConfiguration(
+open class DomainInterceptorConfiguration(
     private val domainRegistry: DomainRegistry,
     domainTraceInterceptorConfiguration: DomainTraceInterceptorConfiguration,
 ) {
@@ -30,13 +28,7 @@ class DomainInterceptorConfiguration(
     }
 
     @Bean
-    internal fun domainTagsService(
-        domainSpanService: DomainSpanService,
-        domainMdcProvider: DomainMdcProvider
-    ) = DomainTagsService(domainSpanService, domainMdcProvider)
-
-    @Bean
-    internal fun advisor(
+    open fun advisor(
         domainTagsService: DomainTagsService,
         domainProvider: DomainProvider,
     ): Advisor {
