@@ -1,6 +1,5 @@
-package com.monolith.splitter
+package com.monolith.splitter.configuration
 
-import com.monolith.splitter.configuration.DomainTraceInterceptorConfiguration
 import org.springframework.context.annotation.Configuration
 
 @Configuration

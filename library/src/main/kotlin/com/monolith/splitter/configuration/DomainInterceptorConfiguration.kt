@@ -13,17 +13,19 @@ import org.springframework.aop.support.DefaultPointcutAdvisor
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.EnableAspectJAutoProxy
 
 @Configuration
 @ComponentScan
+@EnableAspectJAutoProxy
 open class DomainInterceptorConfiguration(
     private val domainRegistry: DomainRegistry,
-    domainTraceInterceptorConfiguration: DomainTraceInterceptorConfiguration,
+    domainTraceInterceptor: DomainTraceInterceptor,
 ) {
 
     init {
         GlobalTracer.get()
-            .addTraceInterceptor(DomainTraceInterceptor(domainTraceInterceptorConfiguration, domainRegistry))
+            .addTraceInterceptor(domainTraceInterceptor)
         log.info("DomainTraceInterceptor is configured")
     }
 
@@ -36,7 +38,7 @@ open class DomainInterceptorConfiguration(
         // Match both methods annotated with @Domain and methods inside classes annotated with @Domain.
         // Filter out RestController classes, as they are handled by DomainHandlerInterceptor
         pointcut.expression = "!@within(org.springframework.web.bind.annotation.RestController) &&" +
-                "(@annotation(com.konsus.domaintag.Domain) || @within(com.konsus.domaintag.Domain))"
+                "(@annotation(com.monolith.splitter.Domain) || @within(com.monolith.splitter.Domain))"
         return DefaultPointcutAdvisor(
             pointcut,
             DomainMethodInterceptor(domainTagsService, domainProvider, domainRegistry)

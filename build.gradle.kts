@@ -3,7 +3,7 @@ plugins {
 }
 
 group = "com.monolith.splitter"
-version = "1.0-SNAPSHOT" // TODO
+version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
