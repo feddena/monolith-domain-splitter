@@ -5,10 +5,11 @@ import com.monolith.splitter.DomainTags.TEAM
 import com.monolith.splitter.configuration.DomainTraceInterceptorConfiguration
 import datadog.trace.api.interceptor.MutableSpan
 import datadog.trace.api.interceptor.TraceInterceptor
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 @Component
-internal class DomainTraceInterceptor(
+class DomainTraceInterceptor(
     private val settings: DomainTraceInterceptorConfiguration,
     private val domainRegistry: DomainRegistry,
 ) : TraceInterceptor {
@@ -16,6 +17,7 @@ internal class DomainTraceInterceptor(
     override fun priority() = 30
 
     override fun onTraceComplete(spans: MutableCollection<out MutableSpan>): MutableCollection<out MutableSpan> {
+        LoggerFactory.getLogger(DomainTraceInterceptor::class.java).info("On trace complete invoked")
         findClosestDomainInSpans(spans)?.also { earliestDomain ->
             spans.forEach {
                 if (shouldOverrideDDService(it.serviceName)) {

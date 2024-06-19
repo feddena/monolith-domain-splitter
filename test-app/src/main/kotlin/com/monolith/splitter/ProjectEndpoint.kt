@@ -1,5 +1,7 @@
 package com.monolith.splitter
 
+import datadog.trace.api.Trace
+import io.opentracing.Tracer
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -10,12 +12,22 @@ import java.util.UUID
 @RestController
 @RequestMapping("/asset")
 @Domain("PROJECT")
-class ProjectEndpoint {
+class ProjectEndpoint(
+    private val mdcProvider: MdcProvider,
+    private val tracer: Tracer, // TODO
+) {
 
+    @Trace(operationName = "getProject")
     @GetMapping("/{id}")
     fun getProject(@PathVariable id: UUID): ProjectDto {
+        val span = tracer.buildSpan("getProject").start()
         return ProjectDto(id).also {
-            log.info("Successfully fetched project - projectId=$id")
+            val logDomain = mdcProvider.get("domain")
+            val logTeam = mdcProvider.get("team")
+            log.info("Successfully fetched project " +
+                    "- projectId=$id, domain=$logDomain" +
+                    ", team=$logTeam")
+            span.finish()
         }
     }
 

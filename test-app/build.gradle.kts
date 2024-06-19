@@ -12,6 +12,13 @@ repositories {
 
 dependencies {
     implementation(project(":library"))
+    // OpenTracing API
+    implementation("io.opentracing:opentracing-api:0.33.0")
+    implementation("io.opentracing:opentracing-util:0.33.0")
+    // Datadog Tracing API
+    implementation("com.datadoghq:dd-trace-api:1.34.0")
+    implementation("com.datadoghq:dd-trace-ot:1.34.0")
+
 
     // Spring Boot dependencies
     implementation("org.springframework.boot:spring-boot-starter")

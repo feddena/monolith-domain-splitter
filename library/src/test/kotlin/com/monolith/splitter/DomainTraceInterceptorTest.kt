@@ -10,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
-// TODO: rm konsus
 @ExtendWith(SoftAssertionsExtension::class)
 class DomainTraceInterceptorTest {
     @InjectSoftAssertions
