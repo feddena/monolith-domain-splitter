@@ -2,6 +2,7 @@ package com.monolith.splitter
 
 import com.monolith.splitter.DomainTags.DOMAIN
 import com.monolith.splitter.DomainTags.TEAM
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
@@ -32,6 +33,6 @@ class DomainMdcProvider(
     }
 
     private companion object {
-        val log = LoggerFactory.getLogger(DomainMdcProvider::class.java)
+        val log: Logger = LoggerFactory.getLogger(DomainMdcProvider::class.java)
     }
 }
