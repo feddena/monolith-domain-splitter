@@ -13,21 +13,26 @@ class DomainTraceInterceptor(
     private val settings: DomainTraceInterceptorConfiguration,
     private val domainRegistry: DomainRegistry,
 ) : TraceInterceptor {
-
     override fun priority() = 30
 
     override fun onTraceComplete(spans: MutableCollection<out MutableSpan>): MutableCollection<out MutableSpan> {
-        LoggerFactory.getLogger(DomainTraceInterceptor::class.java).info("On trace complete invoked")
         findClosestDomainInSpans(spans)?.also { earliestDomain ->
+            val domain = earliestDomain.lowercaseName()
+            val team = earliestDomain.team.lowercaseName()
             spans.forEach {
                 if (shouldOverrideDDService(it.serviceName)) {
-                    it.serviceName = settings.getServiceNamePrefix() + earliestDomain.lowercaseName()
+                    it.serviceName = settings.getServiceNamePrefix() + domain
                 }
-                it.setTag(DOMAIN, earliestDomain.lowercaseName())
-                it.setTag(TEAM, earliestDomain.team.lowercaseName())
+                it.setTag(DOMAIN, domain)
+                it.setTag(TEAM, team)
             }
+            log.info(
+                "Successfully set domain and team to spans" +
+                    " - domain=$domain" +
+                    ", team=$team" +
+                    ", serviceName=${spans.firstOrNull()?.serviceName}",
+            )
         }
-
         return spans
     }
 
@@ -54,6 +59,9 @@ class DomainTraceInterceptor(
             .filter { it.tags.containsKey(DOMAIN) }
             .maxByOrNull { it.startTime }
 
-    private fun shouldOverrideDDService(serviceName: String?) =
-        serviceName in settings.getServicesToOverride()
+    private fun shouldOverrideDDService(serviceName: String?) = serviceName in settings.getServicesToOverride()
+
+    private companion object {
+        private val log = LoggerFactory.getLogger(DomainTraceInterceptor::class.java)
+    }
 }

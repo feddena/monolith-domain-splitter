@@ -6,6 +6,7 @@ import com.monolith.splitter.DomainRegistry
 import com.monolith.splitter.DomainTagsService
 import com.monolith.splitter.DomainTraceInterceptor
 import datadog.trace.api.GlobalTracer
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.aop.Advisor
 import org.springframework.aop.aspectj.AspectJExpressionPointcut
@@ -22,7 +23,6 @@ open class DomainInterceptorConfiguration(
     private val domainRegistry: DomainRegistry,
     domainTraceInterceptor: DomainTraceInterceptor,
 ) {
-
     init {
         GlobalTracer.get()
             .addTraceInterceptor(domainTraceInterceptor)
@@ -38,16 +38,16 @@ open class DomainInterceptorConfiguration(
         // Match both methods annotated with @Domain and methods inside classes annotated with @Domain.
         // Filter out RestController classes, as they are handled by DomainHandlerInterceptor
         pointcut.expression = "!@within(org.springframework.web.bind.annotation.RestController) &&" +
-                "(@annotation(com.monolith.splitter.Domain) || @within(com.monolith.splitter.Domain))"
+            "(@annotation(com.monolith.splitter.Domain) || @within(com.monolith.splitter.Domain))"
         return DefaultPointcutAdvisor(
             pointcut,
-            DomainMethodInterceptor(domainTagsService, domainProvider, domainRegistry)
+            DomainMethodInterceptor(domainTagsService, domainProvider, domainRegistry),
         ).also {
             log.info("DomainMethodInterceptor is configured to target both classes and methods")
         }
     }
 
     private companion object {
-        val log = LoggerFactory.getLogger(DomainInterceptorConfiguration::class.java)
+        val log: Logger = LoggerFactory.getLogger(DomainInterceptorConfiguration::class.java)
     }
 }

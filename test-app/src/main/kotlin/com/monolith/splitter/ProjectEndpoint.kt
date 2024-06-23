@@ -1,7 +1,6 @@
 package com.monolith.splitter
 
 import datadog.trace.api.Trace
-import io.opentracing.Tracer
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -10,29 +9,52 @@ import org.springframework.web.bind.annotation.RestController
 import java.util.UUID
 
 @RestController
-@RequestMapping("/asset")
+@RequestMapping("/project")
 @Domain("PROJECT")
 class ProjectEndpoint(
     private val mdcProvider: MdcProvider,
-    private val tracer: Tracer, // TODO
 ) {
-
     @Trace(operationName = "getProject")
     @GetMapping("/{id}")
-    fun getProject(@PathVariable id: UUID): ProjectDto {
-        val span = tracer.buildSpan("getProject").start()
+    fun getProject(
+        @PathVariable id: UUID,
+    ): ProjectDto {
         return ProjectDto(id).also {
             val logDomain = mdcProvider.get("domain")
             val logTeam = mdcProvider.get("team")
-            log.info("Successfully fetched project " +
-                    "- projectId=$id, domain=$logDomain" +
-                    ", team=$logTeam")
-            span.finish()
+            log.info(
+                "Successfully fetched project " +
+                    "- projectId=$id" +
+                    ", domain=$logDomain" +
+                    ", team=$logTeam",
+            )
+        }
+    }
+
+    @Domain("CHAT")
+    @Trace(operationName = "getProjectOwner")
+    @GetMapping("/{id}/chat")
+    fun getProjectOwner(
+        @PathVariable id: UUID,
+    ): ProjectChatDto {
+        return ProjectChatDto(id).also {
+            val logDomain = mdcProvider.get("domain")
+            val logTeam = mdcProvider.get("team")
+            log.info(
+                "Successfully fetched project chat " +
+                    "- projectId=$id" +
+                    ", domain=$logDomain" +
+                    ", team=$logTeam",
+            )
         }
     }
 
     data class ProjectDto(
         val id: UUID,
+    )
+
+    data class ProjectChatDto(
+        val projectId: UUID,
     )
 
     private companion object {

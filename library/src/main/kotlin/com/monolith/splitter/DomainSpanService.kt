@@ -1,6 +1,7 @@
 package com.monolith.splitter
 
 import com.monolith.splitter.DomainTags.DOMAIN
+import io.opentracing.Span
 import io.opentracing.util.GlobalTracer
 import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
@@ -9,11 +10,11 @@ import org.springframework.stereotype.Service
 class DomainSpanService(private val spanProvider: SpanProvider) {
     fun addDomainTagToSpan(domain: DomainValue) {
         val span = spanProvider.activeSpan()
-        span?.setTag(DOMAIN, domain.lowercaseName())
+        span.setTag(DOMAIN, domain.lowercaseName())
     }
 }
 
 @Component
 class SpanProvider {
-    fun activeSpan() = GlobalTracer.get().activeSpan()
+    fun activeSpan(): Span = GlobalTracer.get().activeSpan()
 }

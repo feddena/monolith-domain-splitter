@@ -3,9 +3,9 @@ package com.monolith.splitter.configuration
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class DomainInterceptorConfigurationImpl: DomainTraceInterceptorConfiguration {
+class DomainInterceptorConfigurationImpl : DomainTraceInterceptorConfiguration {
     override fun getServicesToOverride(): Set<String> {
-        return setOf("test-app-service")
+        return setOf("monolith-service-name")
     }
 
     override fun getServiceNamePrefix(): String {
