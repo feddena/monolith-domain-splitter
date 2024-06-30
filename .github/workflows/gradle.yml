@@ -29,11 +29,6 @@ jobs:
       run: ./gradlew :library:build :library:test
     - name: Build and test test-app module
       run: ./gradlew :test-app:build :test-app:test
-    - name: Publish library to Maven Central
-      run: ./gradlew :library:publish
-      env:
-        MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
-        MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
 
   dependency-submission:
     runs-on: ubuntu-latest
