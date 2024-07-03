@@ -1,9 +1,6 @@
 plugins {
-    kotlin("jvm") version "2.0.0"
+    kotlin("jvm") version "1.9.20"
 }
-
-group = "com.monolith.splitter"
-version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()

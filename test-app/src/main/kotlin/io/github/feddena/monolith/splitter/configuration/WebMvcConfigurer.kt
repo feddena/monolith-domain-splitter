@@ -7,7 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @Component
 class WebMvcConfigurer(
-    private val domainHandlerInterceptor: io.github.feddena.monolith.splitter.DomainHandlerInterceptor,
+    private val domainHandlerInterceptor: DomainHandlerInterceptor,
 ) : WebMvcConfigurer {
     override fun addInterceptors(registry: InterceptorRegistry) {
         registry.addInterceptor(domainHandlerInterceptor)
