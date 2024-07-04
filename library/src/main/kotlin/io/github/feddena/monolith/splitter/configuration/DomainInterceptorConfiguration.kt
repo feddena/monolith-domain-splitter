@@ -38,7 +38,7 @@ open class DomainInterceptorConfiguration(
         // Match both methods annotated with @Domain and methods inside classes annotated with @Domain.
         // Filter out RestController classes, as they are handled by DomainHandlerInterceptor
         pointcut.expression = "!@within(org.springframework.web.bind.annotation.RestController) &&" +
-            "(@annotation(com.monolith.splitter.Domain) || @within(com.monolith.splitter.Domain))"
+            "(@annotation(io.github.feddena.monolith.splitter.Domain) || @within(io.github.feddena.monolith.splitter.Domain))"
         return DefaultPointcutAdvisor(
             pointcut,
             DomainMethodInterceptor(domainTagsService, domainProvider, domainRegistry),
