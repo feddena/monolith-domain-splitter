@@ -25,12 +25,10 @@ jobs:
         ./dd-java-agent-download.sh
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
-    - name: Build library module
-      run: ./gradlew :library:build
+    - name: Build and test library module
+      run: ./gradlew :library:build :library:test
     - name: Publish library module to Maven local
       run: ./gradlew :library:publishMavenJavaPublicationToMavenLocal
-    - name: Test library module
-      run: ./gradlew :library:test
     - name: Build and test test-app module
       run: ./gradlew :test-app:build :test-app:test
 
