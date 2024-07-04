@@ -8,10 +8,11 @@ plugins {
 
 repositories {
     mavenCentral()
+    mavenLocal() // fetch library from the local maven
 }
 
 dependencies {
-    implementation(project(":library"))
+    implementation("io.github.feddena.monolith.splitter:monolith-domain-splitter:0.0.2")
     // OpenTracing API
     implementation("io.opentracing:opentracing-api:0.33.0")
     implementation("io.opentracing:opentracing-util:0.33.0")
