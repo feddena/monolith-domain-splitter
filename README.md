@@ -30,7 +30,7 @@ enum class TeamImpl : Team {
 
 ### 2. Add Dependencies
 
-Add the library and opentracing dependencies
+Add the library and opentracing dependencies.
 
 If you use gradle add to your `build.gradle.kts` file:
 ```kotlin
@@ -46,6 +46,8 @@ dependencies {
 Annotate your main application class to include the monolith-domain-splitter package for component scanning.
 
 ```kotlin
+package your.app.pkg
+
 @SpringBootApplication(scanBasePackages = ["your.app.pkg", "io.github.feddena.monolith.splitter"])
 class StorageApplication
 
@@ -75,37 +77,22 @@ fun executeNotSupportedByAnnotationsLogic() {
 }
 ```
 
-### 6. Configure the Library
-
-Ensure you have the necessary configuration classes to set up the domain and team management.
-Here are the configurations provided in your project:
+### 6. Register your custom domains to registry
 
 ```kotlin
-package io.github.feddena.monolith.splitter
-
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
-
 @Configuration
-class DomainConfiguration {
-
-    @Bean
-    fun domainTagsService(): DomainTagsService {
-        return DomainTagsServiceImpl()
-    }
-
-    @Bean
-    fun domainTraceInterceptorConfiguration(): DomainTraceInterceptorConfiguration {
-        return DomainTraceInterceptorConfigurationImpl()
-    }
-
-    @Bean
-    fun domainValue(): DomainValue {
-        return DomainValueImpl()
+@EnableAspectJAutoProxy
+class DomainConfiguration(
+    private val domainRegistry: DomainRegistry,
+) {
+    init {
+        DomainValueImpl.entries
+            .forEach { domainRegistry.registerDomainValue(it) }
     }
 }
 ```
 
+### 7. Add DomainTraceInterceptorConfiguration to configure artificial services usage
 ```kotlin
 @Configuration
 class DomainTraceInterceptorConfigurationImpl : DomainTraceInterceptorConfiguration {
@@ -122,11 +109,10 @@ class DomainTraceInterceptorConfigurationImpl : DomainTraceInterceptorConfigurat
 }
 ```
 
-WebMvcConfigurer.kt
-
+### 8. Add WebMvc Interceptor to support annotations on REST requests 
 ```kotlin
 @Component
-class WebMvcConfigurer(
+class WebMvcConfigurerDomain(
     private val domainHandlerInterceptor: DomainHandlerInterceptor,
 ) : WebMvcConfigurer {
     override fun addInterceptors(registry: InterceptorRegistry) {
@@ -135,20 +121,7 @@ class WebMvcConfigurer(
 }
 ```
 
-### 7. Enable scan of library beans
-
-```kotlin
-package your.app.pkg
-
-@SpringBootApplication(scanBasePackages = ["your.app.pkg", "io.github.feddena.monolith.splitter"])
-class YourApplication
-
-fun main(args: Array<String>) {
-    runApplication<YourApplication>(*args)
-}
-```
-
-### 8. Monitor with Datadog
+### 9. Monitor with Datadog
 
 Use artificial service filters for monitors, dashboards, and APM traces filtering in Datadog to keep track of different
 domains and teams. Make sure your project has the Datadog agent configured for full functionality.
