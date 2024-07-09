@@ -12,7 +12,7 @@ object Meta {
     const val LICENSE = "MIT License"
     const val LIBRARY_NAME = "monolith-domain-splitter"
     const val GITHUB_REPO = "feddena/monolith-domain-splitter"
-    const val VERSION = "0.0.1"
+    const val VERSION = "0.0.2"
 }
 
 group = "io.github.feddena.monolith.splitter"
